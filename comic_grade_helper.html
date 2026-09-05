@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Comic Grade Helper</title>
+<style>
+:root{
+  --bg:#f4f4f6; --card:#fff; --text:#111; --muted:#666; --border:#d9d9df;
+  --accent:#111; --good:#eaf7ec; --warn:#fff7dc; --bad:#fdeaea;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:rgba(244,244,246,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:24px;margin:4px 0}
+.sub{color:var(--muted);font-size:14px;line-height:1.4}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0}
+h2{font-size:18px;margin:0 0 12px}
+label{display:block;font-weight:600;margin:12px 0 6px}
+select,input,textarea,button{width:100%;font:inherit}
+select,input,textarea{padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+textarea{min-height:84px;resize:vertical}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.row{display:grid;grid-template-columns:1.4fr .8fr;gap:10px;align-items:center;margin:9px 0}
+.row .name{font-size:15px}
+.help{font-size:12px;color:var(--muted);margin-top:4px}
+button{border:0;border-radius:14px;padding:14px;font-weight:700;background:var(--accent);color:#fff;margin-top:10px}
+button.secondary{background:#ececf1;color:#111}
+.result{font-size:18px;line-height:1.45}
+.big{font-size:32px;font-weight:800}
+.badge{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;background:#eee}
+.good{background:var(--good)} .warn{background:var(--warn)} .bad{background:var(--bad)}
+.small{font-size:13px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--border);margin:14px 0}
+details{margin-top:10px}
+summary{font-weight:700;cursor:pointer}
+.scoreline{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Comic Grade Helper</h1>
+    <div class="sub">Record defects first. The app estimates a grade range using baseline wear, structural limiters, and defect accumulation.</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h2>Book</h2>
+    <div class="grid">
+      <div><label>Title / issue</label><input id="title" placeholder="e.g. Superboy #103"></div>
+      <div><label>Era</label><select id="era">
+        <option>Silver/Bronze</option><option>Golden Age</option><option>Modern</option>
+      </select></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>1. Structure</h2>
+    <div class="row"><div class="name">Cover attachment<div class="help">Both staples, one loose, one detached, fully detached</div></div>
+      <select data-key="coverAttach">
+        <option value="0">Firm at both staples</option>
+        <option value="1">Slightly loose / small staple tears</option>
+        <option value="2">Detached at one staple</option>
+        <option value="4">Fully detached</option>
+      </select></div>
+    <div class="row"><div class="name">Interior attachment<div class="help">Centerfold / wraps / pages</div></div>
+      <select data-key="interiorAttach">
+        <option value="0">Firm</option>
+        <option value="1">Minor pulls / small tears</option>
+        <option value="2">One wrap/page detached at staple</option>
+        <option value="3">Several wraps/pages detached</option>
+        <option value="4">Multiple loose/detached sections</option>
+      </select></div>
+    <div class="row"><div class="name">Spine split<div class="help">Longest split</div></div>
+      <select data-key="spineSplit">
+        <option value="0">None</option>
+        <option value="1">Tiny (&lt;5 mm)</option>
+        <option value="2">Small (5–15 mm)</option>
+        <option value="3">Moderate (15–30 mm)</option>
+        <option value="4">Large (&gt;30 mm)</option>
+      </select></div>
+    <div class="row"><div class="name">Missing material</div>
+      <select data-key="missing">
+        <option value="0">None</option>
+        <option value="1">Tiny chips</option>
+        <option value="2">Several small pieces</option>
+        <option value="3">Noticeable piece(s)</option>
+        <option value="4">Large piece(s)</option>
+      </select></div>
+  </section>
+
+  <section class="card">
+    <h2>2. Spine</h2>
+    <div class="row"><div class="name">Spine stress / color breaks</div>
+      <select data-key="spineWear">
+        <option value="0">Very light</option><option value="1">Light</option>
+        <option value="2">Moderate</option><option value="3">Heavy</option><option value="4">Severe</option>
+      </select></div>
+    <div class="row"><div class="name">Spine roll</div>
+      <select data-key="roll">
+        <option value="0">None</option><option value="1">Slight</option>
+        <option value="2">Moderate</option><option value="3">Pronounced</option>
+      </select></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Front cover</h2>
+    <div class="row"><div class="name">Creases</div>
+      <select data-key="frontCrease">
+        <option value="0">None / tiny</option><option value="1">Light</option><option value="2">Moderate</option><option value="3">Heavy</option>
+      </select></div>
+    <div class="row"><div class="name">Staining / discoloration</div>
+      <select data-key="frontStain">
+        <option value="0">None</option><option value="1">Light / superficial</option><option value="2">Noticeable</option><option value="3">Penetrating / larger</option><option value="4">Heavy / water damage</option>
+      </select></div>
+    <div class="row"><div class="name">Writing</div>
+      <select data-key="writing">
+        <option value="0">None</option><option value="1">Tiny notation</option><option value="2">Small obvious writing</option><option value="3">Prominent name / writing</option><option value="4">Large scribbling / defacement</option>
+      </select></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Back cover</h2>
+    <div class="row"><div class="name">Back wear / soiling</div>
+      <select data-key="backWear">
+        <option value="0">Very light</option><option value="1">Light</option><option value="2">Moderate</option><option value="3">Heavy</option>
+      </select></div>
+    <div class="row"><div class="name">Back tears</div>
+      <select data-key="backTears">
+        <option value="0">None</option><option value="1">Tiny</option><option value="2">Small / a few</option><option value="3">Moderate</option><option value="4">Large / multiple</option>
+      </select></div>
+  </section>
+
+  <section class="card">
+    <h2>5. Edges & corners</h2>
+    <div class="row"><div class="name">Edge wear</div>
+      <select data-key="edgeWear">
+        <option value="0">Very light</option><option value="1">Light</option><option value="2">Moderate, localized</option><option value="3">Moderate, multiple edges</option><option value="4">Heavy / ragged</option>
+      </select></div>
+    <div class="row"><div class="name">Corners</div>
+      <select data-key="corners">
+        <option value="0">Sharp</option><option value="1">Slightly blunted</option><option value="2">Rounded / worn</option><option value="3">Heavily worn</option>
+      </select></div>
+  </section>
+
+  <section class="card">
+    <h2>6. Interior</h2>
+    <div class="row"><div class="name">Page quality</div>
+      <select data-key="pages">
+        <option value="0">White / off-white</option><option value="1">Off-white / cream</option><option value="2">Cream / tan</option><option value="3">Brittle / fragile</option>
+      </select></div>
+    <div class="row"><div class="name">Interior tears / stains</div>
+      <select data-key="interiorDamage">
+        <option value="0">None / trivial</option><option value="1">Light</option><option value="2">Moderate</option><option value="3">Heavy</option>
+      </select></div>
+  </section>
+
+  <section class="card">
+    <h2>7. Eye appeal</h2>
+    <div class="row"><div class="name">Overall presentation</div>
+      <select data-key="appeal">
+        <option value="1">Strong for its wear</option><option value="0" selected>Average</option><option value="-1">Poor / distracting</option>
+      </select></div>
+    <label>Notes</label>
+    <textarea id="notes" placeholder="e.g. strong color, localized 20 mm lower-edge split, staples firm..."></textarea>
+    <button id="gradeBtn">Estimate grade</button>
+    <button id="resetBtn" class="secondary">Reset</button>
+  </section>
+
+  <section class="card" id="resultCard" style="display:none">
+    <h2>Estimate</h2>
+    <div class="result">
+      <div class="big" id="gradeOut"></div>
+      <div id="labelOut"></div>
+      <p id="rangeOut"></p>
+      <p id="whyOut"></p>
+      <span class="badge" id="confidenceOut"></span>
+    </div>
+    <details>
+      <summary>How the app got there</summary>
+      <div id="breakdown"></div>
+    </details>
+    <hr>
+    <div class="small">This is a learning tool, not an official CGC/Overstreet grade. One unusual defect can outweigh the numeric model, so always inspect the neighboring grades.</div>
+  </section>
+</main>
+
+<script>
+const labels = {
+  9.8:"NM/MT",9.6:"NM+",9.4:"NM",9.2:"NM-",9.0:"VF/NM",8.5:"VF+",8.0:"VF",
+  7.5:"VF-",7.0:"FN/VF",6.5:"FN+",6.0:"FN",5.5:"FN-",5.0:"VG/FN",
+  4.5:"VG+",4.0:"VG",3.5:"VG-",3.0:"G/VG",2.5:"G+",2.0:"G",1.8:"G-",1.5:"FR/G",1.0:"FR",0.5:"PR"
+};
+const grades = [9.8,9.6,9.4,9.2,9.0,8.5,8.0,7.5,7.0,6.5,6.0,5.5,5.0,4.5,4.0,3.5,3.0,2.5,2.0,1.8,1.5,1.0,0.5];
+
+function val(k){return +document.querySelector(`[data-key="${k}"]`).value}
+function nearestGrade(x){return grades.reduce((a,b)=>Math.abs(b-x)<Math.abs(a-x)?b:a)}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function estimate(){
+  // Baseline wear: start high, then reduce for accumulated non-structural defects.
+  const wear =
+    val("spineWear")*0.55 + val("roll")*0.45 + val("frontCrease")*0.55 +
+    val("frontStain")*0.6 + val("writing")*0.45 + val("backWear")*0.4 +
+    val("backTears")*0.5 + val("edgeWear")*0.55 + val("corners")*0.45 +
+    val("pages")*0.25 + val("interiorDamage")*0.45;
+
+  let baseline = 9.4 - wear;
+  baseline += val("appeal")*0.25;
+  baseline = clamp(baseline,0.5,9.8);
+
+  // Structural ceiling. This is deliberately not "automatic grade".
+  let ceiling = 9.8;
+  const ca=val("coverAttach"), ia=val("interiorAttach"), ss=val("spineSplit"), mi=val("missing");
+  if(ca===1) ceiling=Math.min(ceiling,7.5);
+  if(ca===2) ceiling=Math.min(ceiling,6.0);
+  if(ca===4) ceiling=Math.min(ceiling,3.0);
+  if(ia===1) ceiling=Math.min(ceiling,7.5);
+  if(ia===2) ceiling=Math.min(ceiling,6.0);
+  if(ia===3) ceiling=Math.min(ceiling,4.0);
+  if(ia===4) ceiling=Math.min(ceiling,2.5);
+  if(ss===2) ceiling=Math.min(ceiling,6.0);
+  if(ss===3) ceiling=Math.min(ceiling,4.0);
+  if(ss===4) ceiling=Math.min(ceiling,2.5);
+  if(mi===2) ceiling=Math.min(ceiling,5.0);
+  if(mi===3) ceiling=Math.min(ceiling,3.5);
+  if(mi===4) ceiling=Math.min(ceiling,2.0);
+
+  let raw = Math.min(baseline, ceiling);
+
+  // Extra accumulation penalty if many categories are moderate+.
+  const mods = ["spineWear","frontCrease","frontStain","backWear","backTears","edgeWear","corners","interiorDamage"]
+    .filter(k=>val(k)>=2).length;
+  if(mods>=5) raw-=0.5;
+  if(mods>=7) raw-=0.5;
+
+  const g = nearestGrade(clamp(raw,0.5,9.8));
+  const idx = grades.indexOf(g);
+  const hi = grades[Math.max(0,idx-1)];
+  const lo = grades[Math.min(grades.length-1,idx+1)];
+
+  const structural = Math.min(ceiling,9.8) < 9.8;
+  let why = structural
+    ? `Baseline wear suggests about ${nearestGrade(baseline).toFixed(1)}, but structural defects cap the book around ${nearestGrade(ceiling).toFixed(1)}.`
+    : `No major structural limiter was selected; the estimate is driven mostly by accumulated wear.`;
+  if(mods>=5) why += ` Multiple moderate-or-worse defects add accumulation pressure.`;
+
+  let conf = "Medium confidence";
+  let cls="warn";
+  if(Math.abs(baseline-ceiling)>2.0){conf="Medium confidence — structural limiter dominates"; cls="warn"}
+  if(val("coverAttach")===4 || val("interiorAttach")>=3 || val("missing")>=3){conf="Lower confidence — inspect manually"; cls="bad"}
+  if(!structural && mods<=2){conf="Higher confidence"; cls="good"}
+
+  document.getElementById("gradeOut").textContent = `${g.toFixed(1)} ${labels[g]||""}`;
+  document.getElementById("labelOut").textContent = mental(g);
+  document.getElementById("rangeOut").textContent = `Neighbor check: ${hi.toFixed(1)} / ${g.toFixed(1)} / ${lo.toFixed(1)}`;
+  document.getElementById("whyOut").textContent = why;
+  const c=document.getElementById("confidenceOut"); c.textContent=conf; c.className=`badge ${cls}`;
+  document.getElementById("breakdown").innerHTML = `
+    <div class="scoreline"><span>Baseline from wear</span><strong>${baseline.toFixed(1)}</strong></div>
+    <div class="scoreline"><span>Structural ceiling</span><strong>${ceiling.toFixed(1)}</strong></div>
+    <div class="scoreline"><span>Moderate+ defect categories</span><strong>${mods}</strong></div>
+    <div class="scoreline"><span>Final suggested grade</span><strong>${g.toFixed(1)} ${labels[g]||""}</strong></div>`;
+  document.getElementById("resultCard").style.display="block";
+  document.getElementById("resultCard").scrollIntoView({behavior:"smooth"});
+}
+
+function mental(g){
+  if(g>=9) return "Almost new";
+  if(g>=8) return "Nice";
+  if(g>=7) return "Nice but used";
+  if(g>=6) return "Worn but attractive";
+  if(g>=5) return "Pretty worn";
+  if(g>=4) return "Worn but solid";
+  if(g>=3) return "Heavily worn + significant damage";
+  if(g>=2) return "Very heavily worn / integrity problems";
+  if(g>=1) return "Severely damaged";
+  return "Extremely damaged / incomplete";
+}
+
+document.getElementById("gradeBtn").addEventListener("click",estimate);
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  document.querySelectorAll("select").forEach(s=>s.selectedIndex=0);
+  document.getElementById("notes").value="";
+  document.getElementById("title").value="";
+  document.getElementById("resultCard").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
