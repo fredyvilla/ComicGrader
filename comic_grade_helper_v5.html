@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Comic Grade Helper v5</title>
+<style>
+:root{--bg:#f5f5f7;--card:#fff;--text:#111;--muted:#6a6a70;--border:#d9d9df;--soft:#f0f0f3;--good:#eaf7ed;--warn:#fff3cf;--bad:#fde7e7}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(245,245,247,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.wrap{max-width:820px;margin:auto;padding:16px}.head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}.version{font-size:12px;color:var(--muted);font-weight:800}
+h1{font-size:25px;margin:2px 0 4px}.sub{font-size:14px;color:var(--muted);line-height:1.45}.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin:14px 0;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+h2{font-size:18px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:620px){.grid,.grid3{grid-template-columns:1fr}}
+label{display:block;font-size:14px;font-weight:800;margin:10px 0 6px}select,input,textarea,button{font:inherit;width:100%}select,input,textarea{border:1px solid var(--border);border-radius:12px;padding:11px 12px;background:#fff}textarea{min-height:76px;resize:vertical}.help{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}.row{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;align-items:center;padding:8px 0}@media(max-width:620px){.row{grid-template-columns:1fr}}.name{font-size:14px;font-weight:700}
+.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 14px}.checks label{font-weight:600;margin:0;display:flex;align-items:center;gap:8px}.checks input{width:auto}
+button{border:0;border-radius:14px;padding:14px;font-weight:850;background:#111;color:#fff;margin-top:10px}button.secondary{background:#ececf1;color:#111}.result{line-height:1.5}.big{font-size:36px;font-weight:900;letter-spacing:-.02em}.range{font-size:17px;font-weight:750;margin-top:4px}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:850}.good{background:var(--good)}.warn{background:var(--warn)}.bad{background:var(--bad)}.reason{background:#f7f7f9;border-radius:12px;padding:12px;margin:10px 0}.reason strong{display:block;margin-bottom:4px}.small{font-size:12px;color:var(--muted)}hr{border:0;border-top:1px solid var(--border);margin:14px 0}.scoreline{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:14px}.pillrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pill{background:var(--soft);border-radius:999px;padding:5px 8px;font-size:12px;font-weight:750}
+details{margin-top:10px}summary{font-weight:800;cursor:pointer}.sectionnote{font-size:12px;color:var(--muted);margin:-5px 0 8px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="head"><div><h1>Comic Grade Helper</h1><div class="sub">Broad condition first, dominant limiter second, accumulation by region last. Built to avoid double-counting related defects.</div></div><div class="version">v5</div></div></div></header>
+<main class="wrap">
+<section class="card"><h2>Book</h2><div class="grid"><div><label>Title / issue</label><input id="title" placeholder="e.g. Batman #135"></div><div><label>Era</label><select id="era"><option>Golden Age</option><option selected>Silver/Bronze</option><option>Modern</option></select></div></div></section>
+
+<section class="card"><h2>1. Front surface</h2><div class="sectionnote">Ignore spine, edges and corners here.</div>
+<div class="row"><div class="name">Overall front surface</div><select data-key="frontSurface"><option value="0">Very clean</option><option value="1">Minor wear</option><option value="2">Noticeable wear</option><option value="3">Heavy wear</option><option value="4">Severe damage</option></select></div>
+<div class="checks"><label><input type="checkbox" data-flag="frontCrease">Crease / fold</label><label><input type="checkbox" data-flag="frontSoiling">Soiling / foxing / stain</label><label><input type="checkbox" data-flag="frontWriting">Writing</label><label><input type="checkbox" data-flag="frontDent">Dent / impression</label></div>
+</section>
+
+<section class="card"><h2>2. Front edges</h2>
+<div class="grid3"><div><label>Top</label><select data-key="frontTop"><option value="0">Clean</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Tears/chips/missing material</option></select></div><div><label>Right</label><select data-key="frontRight"><option value="0">Clean</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Tears/chips/missing material</option></select></div><div><label>Bottom</label><select data-key="frontBottom"><option value="0">Clean</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Tears/chips/missing material</option></select></div></div>
+<div class="row"><div class="name">Largest front edge tear / chip</div><select data-key="frontEdgeSize"><option value="0">None</option><option value="1">&lt;2 mm</option><option value="2">2–5 mm</option><option value="3">5–15 mm</option><option value="4">15+ mm</option></select></div>
+</section>
+
+<section class="card"><h2>3. Front corners</h2><div class="sectionnote">Choose the worst trait for each corner. Use notes for combinations like “frayed + creased.”</div>
+<div class="grid"><div><label>Top left</label><select data-key="ctl"><option value="0">Sharp</option><option value="1">Slightly tapered / blunted</option><option value="2">Rounded</option><option value="3">Creased / frayed</option><option value="4">Torn</option><option value="5">Nearly detached / missing</option></select></div><div><label>Top right</label><select data-key="ctr"><option value="0">Sharp</option><option value="1">Slightly tapered / blunted</option><option value="2">Rounded</option><option value="3">Creased / frayed</option><option value="4">Torn</option><option value="5">Nearly detached / missing</option></select></div><div><label>Bottom right</label><select data-key="cbr"><option value="0">Sharp</option><option value="1">Slightly tapered / blunted</option><option value="2">Rounded</option><option value="3">Creased / frayed</option><option value="4">Torn</option><option value="5">Nearly detached / missing</option></select></div><div><label>Bottom left</label><select data-key="cbl"><option value="0">Sharp</option><option value="1">Slightly tapered / blunted</option><option value="2">Rounded</option><option value="3">Creased / frayed</option><option value="4">Torn</option><option value="5">Nearly detached / missing</option></select></div></div>
+</section>
+
+<section class="card"><h2>4. Spine</h2><div class="sectionnote">Start with the overall judgment. Add measurements only when they matter.</div>
+<div class="row"><div class="name">Overall spine condition</div><select data-key="spineOverall"><option value="0">Clean / very light</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Severe wear / damage</option></select></div>
+<div class="grid"><div><label>Stress marks</label><select data-key="stressCount"><option value="0">None / few</option><option value="1">Several</option><option value="2">Many</option><option value="3">Throughout</option></select></div><div><label>Largest stress</label><select data-key="stressSize"><option value="0">&lt;2 mm / none</option><option value="1">2–5 mm</option><option value="2">5–10 mm</option><option value="3">10+ mm</option></select></div><div><label>Largest spine split</label><select data-key="spineSplit"><option value="0">None</option><option value="1">&lt;5 mm</option><option value="2">5–15 mm</option><option value="3">15–30 mm</option><option value="4">30+ mm</option></select></div><div><label>Tear from spine into cover</label><select data-key="faceTear"><option value="0">None</option><option value="1">&lt;5 mm</option><option value="2">5–15 mm</option><option value="3">15–30 mm</option><option value="4">30+ mm</option></select></div></div>
+</section>
+
+<section class="card"><h2>5. Back surface</h2>
+<div class="row"><div class="name">Overall back surface</div><select data-key="backSurface"><option value="0">Very clean</option><option value="1">Minor wear</option><option value="2">Noticeable wear</option><option value="3">Heavy wear</option><option value="4">Severe damage</option></select></div>
+<div class="checks"><label><input type="checkbox" data-flag="backCrease">Crease / fold</label><label><input type="checkbox" data-flag="backSoiling">Soiling / foxing / stain</label><label><input type="checkbox" data-flag="backWriting">Writing</label><label><input type="checkbox" data-flag="waterEvidence">Water evidence</label></div>
+</section>
+
+<section class="card"><h2>6. Back edges</h2>
+<div class="grid3"><div><label>Top</label><select data-key="backTop"><option value="0">Clean</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Tears/chips/missing material</option></select></div><div><label>Left</label><select data-key="backLeft"><option value="0">Clean</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Tears/chips/missing material</option></select></div><div><label>Bottom</label><select data-key="backBottom"><option value="0">Clean</option><option value="1">Light wear</option><option value="2">Moderate wear</option><option value="3">Heavy wear</option><option value="4">Tears/chips/missing material</option></select></div></div>
+<div class="row"><div class="name">Largest back edge tear / chip</div><select data-key="backEdgeSize"><option value="0">None</option><option value="1">&lt;2 mm</option><option value="2">2–5 mm</option><option value="3">5–15 mm</option><option value="4">15+ mm</option></select></div>
+</section>
+
+<section class="card"><h2>7. Back corners</h2>
+<div class="row"><div class="name">Worst back corner</div><select data-key="backCorner"><option value="0">Sharp</option><option value="1">Slightly tapered / blunted</option><option value="2">Rounded</option><option value="3">Creased / frayed</option><option value="4">Torn</option><option value="5">Nearly detached / missing</option></select></div>
+</section>
+
+<section class="card"><h2>8. Spine roll</h2><div class="row"><div class="name">Measured roll</div><select data-key="roll"><option value="0">None</option><option value="1">&lt;2 mm</option><option value="2">2–5 mm</option><option value="3">5–10 mm</option><option value="4">10+ mm</option></select></div></section>
+
+<section class="card"><h2>9. Open book — cover attachment</h2>
+<div class="row"><div class="name">Cover attachment</div><select data-key="coverAttach"><option value="0">Fully secure</option><option value="1">Loose but attached</option><option value="2">Detached at one staple</option><option value="3">Fully detached from both staples</option><option value="4">Missing cover</option></select></div>
+<div class="help">A one-staple detachment is a limiter, not an automatic low-grade sentence. A fully detached cover is much more serious.</div>
+</section>
+
+<section class="card"><h2>10. Interior attachment</h2><div class="row"><div class="name">Interior binding</div><select data-key="interiorAttach"><option value="0">All wraps secure</option><option value="1">One / few wraps loose</option><option value="2">One wrap detached</option><option value="3">Centerfold detached</option><option value="4">Several wraps detached</option><option value="5">Major interior separation</option></select></div></section>
+
+<section class="card"><h2>11. Interior</h2>
+<div class="grid"><div><label>Page quality</label><select data-key="pages"><option value="0">White</option><option value="1">Off-White / White</option><option value="2">Off-White</option><option value="3">Cream / Off-White</option><option value="4">Cream</option><option value="5">Tan / Cream</option><option value="6">Tan</option><option value="7">Brown</option><option value="8">Brittle</option></select></div><div><label>Interior damage</label><select data-key="interiorDamage"><option value="0">None / trivial</option><option value="1">Minor tears / stains</option><option value="2">Noticeable tears / stains</option><option value="3">Significant damage</option><option value="4">Missing material / page</option></select></div></div>
+<div class="row"><div class="name">Water staining / damage</div><select data-key="water"><option value="0">None</option><option value="1">Localized to cover / edge only</option><option value="2">Affects a few pages</option><option value="3">Affects many pages</option><option value="4">Extensive with rippling / paper damage</option></select></div>
+</section>
+
+<section class="card"><h2>12. Major defect check</h2>
+<div class="sectionnote">Record missing cover material separately so small chips are not treated like a large missing piece.</div>
+<div class="row"><div class="name">Missing cover material</div><select data-key="missingCover"><option value="0">None</option><option value="1">Tiny edge chips only</option><option value="2">One small piece missing</option><option value="3">Two or more small pieces missing</option><option value="4">Significant piece / area missing</option></select></div>
+<div class="row"><div class="name">Largest major defect</div><select data-key="major"><option value="0">None</option><option value="1">Large cover tear</option><option value="2">Large / severe cover damage</option><option value="3">Front or back cover missing</option><option value="4">Missing page / coupon cutout</option><option value="5">Fully detached cover</option><option value="6">Major binding failure</option><option value="7">Severe water damage</option></select></div>
+</section>
+
+<section class="card"><h2>13. Overall presentation</h2>
+<div class="grid"><div><label>Eye appeal</label><select data-key="appeal"><option value="2">Strong</option><option value="1">Above average</option><option value="0" selected>Average</option><option value="-1">Weak</option></select></div><div><label>Cover gloss</label><select data-key="gloss"><option value="0">Strong</option><option value="1">Slightly diminished</option><option value="2">Noticeably diminished</option><option value="3">Substantially diminished</option></select></div></div>
+<label>Notes</label><textarea id="notes" placeholder="e.g. strong colors, frayed BR corner, 20 mm lower spine split, water stain along bottom margin through many pages"></textarea>
+<button id="gradeBtn">Estimate grade</button><button id="resetBtn" class="secondary">Reset</button>
+</section>
+
+<section class="card" id="resultCard" style="display:none"><h2>Estimate</h2><div class="result"><div class="big" id="gradeOut"></div><div class="range" id="rangeOut"></div><div class="pillrow" id="pills"></div><div class="reason"><strong>Main limiters</strong><span id="whyOut"></span></div><div class="reason"><strong>Why not higher?</strong><span id="higherOut"></span></div><div class="reason"><strong>Why not lower?</strong><span id="lowerOut"></span></div><p><span class="badge" id="confidenceOut"></span></p></div><details><summary>How v4 got there</summary><div id="breakdown"></div></details><hr><div class="small">Learning estimate only. Comic grading is holistic; unusual production defects, restoration, incompleteness and hidden damage still require judgment.</div></section>
+</main>
+<script>
+const labels={9.8:"NM/MT",9.6:"NM+",9.4:"NM",9.2:"NM-",9.0:"VF/NM",8.5:"VF+",8.0:"VF",7.5:"VF-",7.0:"FN/VF",6.5:"FN+",6.0:"FN",5.5:"FN-",5.0:"VG/FN",4.5:"VG+",4.0:"VG",3.5:"VG-",3.0:"G/VG",2.5:"G+",2.0:"G",1.8:"G-",1.5:"FR/G",1.0:"FR",0.5:"PR"};
+const grades=[9.8,9.6,9.4,9.2,9.0,8.5,8.0,7.5,7.0,6.5,6.0,5.5,5.0,4.5,4.0,3.5,3.0,2.5,2.0,1.8,1.5,1.0,0.5];
+const val=k=>+document.querySelector(`[data-key="${k}"]`).value;const flag=k=>document.querySelector(`[data-flag="${k}"]`)?.checked||false;
+const nearest=x=>grades.reduce((a,b)=>Math.abs(b-x)<Math.abs(a-x)?b:a);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function bandName(g){if(g>=9)return"Almost new";if(g>=8)return"Nice";if(g>=7)return"Nice but used";if(g>=6)return"Worn but attractive";if(g>=5)return"Pretty worn";if(g>=4)return"Worn but solid";if(g>=3)return"Heavily worn + structural damage";if(g>=2)return"Heavily worn + structurally compromised";if(g>=1)return"Severely damaged";return"Extremely damaged / incomplete"}
+function estimate(){
+ const s={frontSurface:val('frontSurface'),frontTop:val('frontTop'),frontRight:val('frontRight'),frontBottom:val('frontBottom'),frontEdgeSize:val('frontEdgeSize'),ctl:val('ctl'),ctr:val('ctr'),cbr:val('cbr'),cbl:val('cbl'),spineOverall:val('spineOverall'),stressCount:val('stressCount'),stressSize:val('stressSize'),spineSplit:val('spineSplit'),faceTear:val('faceTear'),backSurface:val('backSurface'),backTop:val('backTop'),backLeft:val('backLeft'),backBottom:val('backBottom'),backEdgeSize:val('backEdgeSize'),backCorner:val('backCorner'),roll:val('roll'),coverAttach:val('coverAttach'),interiorAttach:val('interiorAttach'),pages:val('pages'),interiorDamage:val('interiorDamage'),water:val('water'),missingCover:val('missingCover'),major:val('major'),appeal:val('appeal'),gloss:val('gloss')};
+ const frontEdges=[s.frontTop,s.frontRight,s.frontBottom], backEdges=[s.backTop,s.backLeft,s.backBottom], corners=[s.ctl,s.ctr,s.cbr,s.cbl,s.backCorner];
+ const edgeMax=Math.max(...frontEdges,...backEdges), cornerMax=Math.max(...corners);
+
+ // V5: broad condition is a weighted whole-book read, not "worst box wins".
+ // Related defects are grouped later so a split + spine wear + staple-area damage
+ // do not each subtract a separate chunk of grade.
+ const cornerSev=Math.min(4,cornerMax), rollSev=Math.min(4,s.roll);
+ const visualScore=(s.frontSurface*.25)+(s.backSurface*.15)+(s.spineOverall*.20)+(edgeMax*.15)+(cornerSev*.10)+(rollSev*.05)+(Math.min(4,s.interiorDamage)*.10);
+ let baseline;
+ if(visualScore<=.35) baseline=9.2;
+ else if(visualScore<=.75) baseline=8.0;
+ else if(visualScore<=1.15) baseline=7.0;
+ else if(visualScore<=1.55) baseline=6.5;
+ else if(visualScore<=1.90) baseline=6.0;
+ else if(visualScore<=2.25) baseline=5.5;
+ else if(visualScore<=2.55) baseline=5.0;
+ else if(visualScore<=2.95) baseline=4.5;
+ else if(visualScore<=3.30) baseline=4.0;
+ else baseline=3.5;
+
+ // Small fine-tuning only. Eye appeal can choose within a range; it cannot erase damage.
+ let fine=0;
+ if(s.gloss===3) fine-=0.15;
+ if(s.pages===7) fine-=0.15; else if(s.pages===8) fine-=0.5;
+ if(s.appeal===2) fine+=0.25; else if(s.appeal===1) fine+=0.10; else if(s.appeal===-1) fine-=0.20;
+
+ let ceiling=9.8; const caps=[]; const cap=(c,t)=>{ceiling=Math.min(ceiling,c);caps.push(t)};
+ // Structural ceilings. These constrain; they do not also get separately subtracted below.
+ if(s.coverAttach===1) cap(8.0,'loose cover attachment');
+ if(s.coverAttach===2) cap(7.5,'cover detached at one staple');
+ if(s.coverAttach===3) cap(4.0,'fully detached cover');
+ if(s.coverAttach===4) cap(1.5,'missing cover');
+ if(s.interiorAttach===1) cap(7.5,'loose interior wraps');
+ if(s.interiorAttach===2) cap(6.5,'one detached wrap');
+ if(s.interiorAttach===3) cap(7.5,'centerfold detached');
+ if(s.interiorAttach===4) cap(4.0,'several detached wraps');
+ if(s.interiorAttach===5) cap(2.5,'major interior separation');
+
+ if(s.spineSplit===2) cap(7.0,'5–15 mm spine split');
+ if(s.spineSplit===3) cap(5.5,'15–30 mm spine split');
+ if(s.spineSplit===4) cap(4.0,'30+ mm spine split');
+ if(s.faceTear===3) cap(5.0,'15–30 mm tear from spine into cover');
+ if(s.faceTear===4) cap(4.0,'30+ mm tear from spine into cover');
+
+ if(s.water===2) cap(7.0,'water staining on a few pages');
+ if(s.water===3) cap(5.5,'water staining affecting many pages');
+ if(s.water===4) cap(3.5,'extensive water damage / rippling');
+
+ // Missing material gets its own scale. Tiny chips should not equal a missing chunk.
+ if(s.missingCover===1) cap(7.0,'tiny edge chips');
+ if(s.missingCover===2) cap(5.5,'one small piece of cover missing');
+ if(s.missingCover===3) cap(4.5,'multiple small pieces of cover missing');
+ if(s.missingCover===4) cap(3.5,'significant cover material missing');
+
+ if(s.major===1) cap(5.0,'large cover tear');
+ if(s.major===2) cap(3.5,'large / severe cover damage');
+ if(s.major===3) cap(1.5,'front or back cover missing');
+ if(s.major===4) cap(1.5,'missing page / coupon cutout');
+ if(s.major===5) cap(4.0,'fully detached cover');
+ if(s.major===6) cap(2.5,'major binding failure');
+ if(s.major===7) cap(3.5,'severe water damage');
+ if(s.interiorDamage===4) cap(2.0,'missing interior material/page');
+
+ // Accumulation is by INDEPENDENT REGION, never by every checkbox.
+ // This is the key V5 change. One damaged spine counts as one damaged spine.
+ const regions={
+   spine:(s.spineOverall>=3||s.spineSplit>=3||s.faceTear>=3),
+   perimeter:(edgeMax>=3||cornerMax>=4||s.missingCover>=2),
+   roll:(s.roll>=3),
+   moisture:(s.water>=3),
+   attachment:(s.coverAttach>=2||s.interiorAttach>=2),
+   interior:(s.interiorDamage>=3),
+   surfaces:(s.frontSurface>=3||s.backSurface>=3)
+ };
+ const seriousRegions=Object.values(regions).filter(Boolean).length;
+ let accumulation=0;
+ // A few independent serious regions are already reflected in baseline. Only broad
+ // multi-region deterioration gets an extra nudge.
+ if(seriousRegions>=6) accumulation=-0.75;
+ else if(seriousRegions>=4) accumulation=-0.50;
+ else if(seriousRegions>=3) accumulation=-0.25;
+
+ // Do not double-punish a hard structural ceiling. If the cap itself already pulls
+ // the book below baseline, accumulation is reduced or eliminated.
+ let preCap=baseline+fine+accumulation;
+ if(ceiling<=baseline-0.5){
+   accumulation=Math.min(0,accumulation+0.25);
+   preCap=baseline+fine+accumulation;
+ }
+ let raw=Math.min(preCap,ceiling); raw=clamp(raw,.5,9.8); let g=nearest(raw);
+ const idx=grades.indexOf(g); const hi=grades[Math.max(0,idx-1)], lo=grades[Math.min(grades.length-1,idx+1)];
+
+ const limiters=[];
+ if(s.coverAttach===2) limiters.push('cover detached at one staple');
+ if(s.coverAttach===3) limiters.push('fully detached cover');
+ if(s.spineSplit>=3) limiters.push(`${s.spineSplit===3?'15–30 mm':'30+ mm'} spine split`); else if(s.spineSplit===2) limiters.push('5–15 mm spine split');
+ if(s.faceTear>=3) limiters.push('large tear from spine into cover');
+ if(s.missingCover===2) limiters.push('small piece of cover missing');
+ if(s.missingCover===3) limiters.push('multiple small cover pieces missing');
+ if(s.missingCover===4) limiters.push('significant cover material missing');
+ if(s.water===3) limiters.push('water staining through many pages');
+ if(s.water===4) limiters.push('extensive water damage');
+ if(s.spineOverall>=3) limiters.push(s.spineOverall===4?'severe spine wear':'heavy spine wear');
+ if(edgeMax>=3) limiters.push(edgeMax===4?'edge tears / chips':'heavy edge wear');
+ if(cornerMax>=4) limiters.push('torn / badly damaged corner'); else if(cornerMax>=2) limiters.push('rounded / frayed corners');
+ if(s.roll>=3) limiters.push(`${s.roll===3?'5–10 mm':'10+ mm'} spine roll`);
+ if(s.interiorAttach>=2) limiters.push('interior attachment defect');
+ if(!limiters.length) limiters.push('general accumulated wear');
+
+ let why=`${limiters.slice(0,6).join(', ')}. `;
+ why+=`The broad whole-book condition starts around ${nearest(baseline).toFixed(1)}. V5 then applies the strongest structural ceiling and only one accumulation effect per independent region, so related spine or edge defects are not counted repeatedly.`;
+ let higher=`A ${hi.toFixed(1)} would need less cumulative wear and/or a cleaner structural profile.`;
+ let lower=`A ${lo.toFixed(1)} would usually require a stronger structural failure, larger missing material, or heavier deterioration across more of the book.`;
+ let conf='Medium confidence', cls='warn';
+ const secure=s.coverAttach===0 && s.interiorAttach===0;
+ if(secure && s.major===0 && s.water<=2 && s.spineSplit<=2 && s.missingCover<=1){conf='Higher confidence';cls='good'}
+ if(s.coverAttach>=3||s.interiorAttach>=4||s.major>=2||s.water===4||s.missingCover===4){conf='Lower confidence — manual review recommended';cls='bad'}
+
+ document.getElementById('gradeOut').textContent=`${g.toFixed(1)} ${labels[g]||''}`;
+ document.getElementById('rangeOut').textContent=`Practical range: ${lo.toFixed(1)}–${hi.toFixed(1)} · Lean: ${g.toFixed(1)} · ${bandName(g)}`;
+ document.getElementById('whyOut').textContent=why; document.getElementById('higherOut').textContent=higher; document.getElementById('lowerOut').textContent=lower;
+ const c=document.getElementById('confidenceOut'); c.textContent=conf;c.className=`badge ${cls}`;
+ document.getElementById('pills').innerHTML=limiters.slice(0,7).map(x=>`<span class="pill">${x}</span>`).join('');
+ document.getElementById('breakdown').innerHTML=`<div class="scoreline"><span>Broad whole-book band</span><strong>${nearest(baseline).toFixed(1)}</strong></div><div class="scoreline"><span>Structural ceiling</span><strong>${nearest(ceiling).toFixed(1)}</strong></div><div class="scoreline"><span>Independent serious regions</span><strong>${seriousRegions}</strong></div><div class="scoreline"><span>Fine-tuning</span><strong>${fine.toFixed(2)}</strong></div><div class="scoreline"><span>Regional accumulation</span><strong>${accumulation.toFixed(2)}</strong></div><div class="scoreline"><span>Final suggested grade</span><strong>${g.toFixed(1)} ${labels[g]||''}</strong></div>`;
+ document.getElementById('resultCard').style.display='block';document.getElementById('resultCard').scrollIntoView({behavior:'smooth'});
+}
+document.getElementById('gradeBtn').addEventListener('click',estimate);
+document.getElementById('resetBtn').addEventListener('click',()=>{document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);document.querySelector('[data-key="appeal"]').selectedIndex=2;document.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=false);document.getElementById('notes').value='';document.getElementById('title').value='';document.getElementById('resultCard').style.display='none';window.scrollTo({top:0,behavior:'smooth'})});
+</script>
+</body></html>
